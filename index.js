@@ -105,31 +105,7 @@ app.command('aprovar@CruzeiroRssBot', (ctx) => {
     aprovar(ctx);
 })
 
-function list_news(ctx) {
-    update_news().then(function (news) {
-        if (news.length == 0) {
-            return ctx.reply('Não existem notícias na fila!');
-        } else {
-            news.forEach(function(e, i, a) {
-                //console.log(e);
-                return ctx.reply(e)
-            });
-        }
-    }).catch(function (err) {
-        return ctx.reply(err)
-        // TRATAR ERRO... POSSL ERRO DE COM BANCO, POR EXEMPLO
-    });
-}
-
-app.command('list', (ctx) => {
-    list_news(ctx)
-});
-
-app.command('list@CruzeiroRssBot', (ctx) => {
-    list_news(ctx)
-});
-
-function send_news() {
+function list_news() {
     update_news().then(function (obj) {
         obj.news.forEach(function(e, i, a) {
             //console.log(e);
@@ -137,13 +113,13 @@ function send_news() {
         });
 
         setTimeout(function() {
-    app.telegram.sendMessage(-169305907, text="Use o menu para avaliar:",
-        reply_markup=Telegraf.Markup.keyboard(obj.opts)
-        .oneTime()
-        .resize()
-        .extra(),
-        disable_notification = true
-    )}, 2000);
+            app.telegram.sendMessage(-169305907, text="Use o menu para avaliar:",
+                reply_markup=Telegraf.Markup.keyboard(obj.opts)
+                .oneTime()
+                .resize()
+                .extra(),
+                disable_notification = true
+            )}, 2000);
 
     }).catch(function (err) {
         return ctx.reply(err)
@@ -151,7 +127,15 @@ function send_news() {
     });
 }
 
-setInterval(send_news, 1000 * 60 * 17);
+app.command('list', (ctx) => {
+    list_news()
+});
+
+app.command('list@CruzeiroRssBot', (ctx) => {
+    list_news()
+});
+
+setInterval(list_news, 1000 * 60 * 17);
 
 app.on('sticker', (ctx) => ctx.reply('👍'))
 app.startPolling()
