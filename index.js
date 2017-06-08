@@ -51,12 +51,20 @@ function rejeitar(ctx) {
     if (typeof id == 'undefined') {
         return ctx.reply('Número da notícia vazio.');
     }
-    console.log(ctx.from, 'Negou notícia: ', id)
+    console.log(ctx.from, 'Rejeitou notícia: ', id)
     var db = new sqlite3.Database(db_file);
-    db.run('update rss set aprovado = ? where rowid = ?', [-1, id]);
+    db.run('update rss set aprovado = ? where rowid = ?', [-1, id], function() {
+        update_news().then(function (obj) {
+            return ctx.reply('Rejeitou notícia: ' + id,
+                reply_markup=Telegraf.Markup.keyboard(obj.opts)
+                .oneTime()
+                .resize()
+                .extra(),
+                disable_notification = true
+            )
+        })
+    });
     db.close();
-
-    return ctx.reply('Rejeitou noticia: ' + id)
 }
 
 app.command('rejeitar', (ctx) => {
@@ -75,10 +83,18 @@ function aprovar(ctx) {
     }
     console.log(ctx.from, 'Aceitou notícia: ', id)
     var db = new sqlite3.Database(db_file);
-    db.run('update rss set aprovado = ? where rowid = ?', [1, id]);
+    db.run('update rss set aprovado = ? where rowid = ?', [1, id], function() {
+        update_news().then(function (obj) {
+            return ctx.reply('Aprovou notícia: ' + id,
+                reply_markup=Telegraf.Markup.keyboard(obj.opts)
+                .oneTime()
+                .resize()
+                .extra(),
+                disable_notification = true
+            )
+        })
+    });
     db.close();
-
-    return ctx.reply('Aprovou notícia: ' + id)
 }
 
 app.command('aprovar', (ctx) => {
