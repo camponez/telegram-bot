@@ -26,7 +26,6 @@ function update_news() {
 var cmds = [
     '/aprovar NUMERO - Aceitar o artigo',
     '/rejeitar NUMERO - Nega o artigo',
-    '/list - Lista todos disponíveis para analise'
 ];
 
 const Telegraf = require('telegraf')
@@ -115,10 +114,6 @@ app.command('rejeitar', (ctx) => {
     rejeitar(ctx);
 })
 
-app.command('list', (ctx) => {
-    list_news()
-});
-
 app.command('aprovar', (ctx) => {
     aprovar(ctx);
 })
@@ -130,10 +125,6 @@ app.command('rejeitar@CruzeiroRssBot', (ctx) => {
 app.command('aprovar@CruzeiroRssBot', (ctx) => {
     aprovar(ctx);
 })
-
-app.command('list@CruzeiroRssBot', (ctx) => {
-    list_news()
-});
 
 setInterval(list_news, 1000 * 60 * 17);
 
