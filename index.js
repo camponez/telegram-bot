@@ -92,14 +92,8 @@ function list_news() {
     var chan_id = -169305907;
     update_news().then(function (obj) {
         if (obj.news.length == 0) {
-            app.telegram.sendMessage(chan_id, text='Não existem notícias na fila!',
-                reply_markup=Telegraf.Markup.keyboard(obj.opts)
-                .oneTime()
-                .resize()
-                .extra()
-            );
-
-        } else {
+            return;
+        }
 
         obj.news.forEach(function(e, i, a) {
             //console.log(e);
@@ -114,7 +108,6 @@ function list_news() {
                 .extra(),
                 disable_notification = true
             )}, 2000);
-        }
 
     }).catch(function (err) {
         return ctx.reply(err)
