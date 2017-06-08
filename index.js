@@ -67,14 +67,6 @@ function rejeitar(ctx) {
     db.close();
 }
 
-app.command('rejeitar', (ctx) => {
-    rejeitar(ctx);
-})
-
-app.command('rejeitar@CruzeiroRssBot', (ctx) => {
-    rejeitar(ctx);
-})
-
 function aprovar(ctx) {
     var msg = ctx.message.text.trim();
     var id = msg.split(' ')[1];
@@ -96,14 +88,6 @@ function aprovar(ctx) {
     });
     db.close();
 }
-
-app.command('aprovar', (ctx) => {
-    aprovar(ctx);
-})
-
-app.command('aprovar@CruzeiroRssBot', (ctx) => {
-    aprovar(ctx);
-})
 
 function list_news() {
     update_news().then(function (obj) {
@@ -127,9 +111,25 @@ function list_news() {
     });
 }
 
+app.command('rejeitar', (ctx) => {
+    rejeitar(ctx);
+})
+
 app.command('list', (ctx) => {
     list_news()
 });
+
+app.command('aprovar', (ctx) => {
+    aprovar(ctx);
+})
+
+app.command('rejeitar@CruzeiroRssBot', (ctx) => {
+    rejeitar(ctx);
+})
+
+app.command('aprovar@CruzeiroRssBot', (ctx) => {
+    aprovar(ctx);
+})
 
 app.command('list@CruzeiroRssBot', (ctx) => {
     list_news()
