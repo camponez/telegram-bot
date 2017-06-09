@@ -115,7 +115,6 @@ app.command('aprovar@CruzeiroRssBot', (ctx) => {
 
 setInterval(list_news, 1000 * 60 * 17);
 
-app.on('sticker', (ctx) => ctx.reply('👍'))
 app.startPolling()
 
 //vim: ts=4:sw=4:expandtab:softtabstop=4:
