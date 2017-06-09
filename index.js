@@ -66,11 +66,16 @@ function avaliar(ctx, msg_response, status) {
     db.close();
 }
 
-function list_news() {
+function list_news(ctx) {
     var chan_id = -169305907;
     update_news().then(function (obj) {
         if (obj.news.length == 0) {
-            return;
+            if (ctx === undefined) {
+                return;
+            } else {
+                ctx.reply('Lista está vazia!');
+                return;
+            }
         }
 
         obj.news.forEach(function(e, i, a) {
@@ -94,7 +99,7 @@ function list_news() {
 }
 
 app.command('list', (ctx) => {
-    list_news()
+    list_news(ctx)
 })
 
 app.command('rejeitar', (ctx) => {
