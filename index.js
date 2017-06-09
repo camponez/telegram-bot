@@ -44,46 +44,24 @@ app.command('start', ({ from, reply }) => {
     return reply('Bem vindo! /help para os comandos')
 })
 
-function rejeitar(ctx) {
+function avaliar(ctx, msg_response, status) {
     var msg = ctx.message.text.trim();
     var id = msg.split(' ')[1];
     if (typeof id == 'undefined') {
         return ctx.reply('Número da notícia vazio.');
     }
-    console.log(ctx.from, 'Rejeitou notícia: ', id)
-    var db = new sqlite3.Database(db_file);
-    db.run('update rss set aprovado = ? where rowid = ?', [-1, id], function() {
-        update_news().then(function (obj) {
-            return ctx.reply('Rejeitou notícia: ' + id,
-                reply_markup=Telegraf.Markup.keyboard(obj.opts)
-                .oneTime()
-                .resize()
-                .extra(),
-                disable_notification = true
-            )
-        })
-    });
-    db.close();
-}
 
-function aprovar(ctx) {
-    var msg = ctx.message.text.trim();
-    var id = msg.split(' ')[1];
-    if (typeof id == 'undefined') {
-        return ctx.reply('Número da notícia vazio.');
-    }
-    console.log(ctx.from, 'Aceitou notícia: ', id)
     var db = new sqlite3.Database(db_file);
-    db.run('update rss set aprovado = ? where rowid = ?', [1, id], function() {
+    db.run('update rss set aprovado = ? where rowid = ?', [status, id], function() {
         update_news().then(function (obj) {
-            return ctx.reply('Aprovou notícia: ' + id,
+            return ctx.reply(msg_response + id,
                 reply_markup=Telegraf.Markup.keyboard(obj.opts)
                 .oneTime()
                 .resize()
                 .extra(),
                 disable_notification = true
             )
-        })
+        });
     });
     db.close();
 }
@@ -115,20 +93,24 @@ function list_news() {
     });
 }
 
-app.command('rejeitar', (ctx) => {
-    rejeitar(ctx);
+app.command('list', (ctx) => {
+    list_news()
 })
 
-app.command('aprovar', (ctx) => {
-    aprovar(ctx);
+app.command('rejeitar', (ctx) => {
+    avaliar(ctx, 'Rejeitou noticia: ', -1);
 })
 
 app.command('rejeitar@CruzeiroRssBot', (ctx) => {
-    rejeitar(ctx);
+    avaliar(ctx, 'Rejeitou noticia: ', -1);
+})
+
+app.command('aprovar', (ctx) => {
+    avaliar(ctx, 'Aprovou noticia: ', 1);
 })
 
 app.command('aprovar@CruzeiroRssBot', (ctx) => {
-    aprovar(ctx);
+    avaliar(ctx, 'Aprovou noticia: ', 1);
 })
 
 setInterval(list_news, 1000 * 60 * 17);
